@@ -46,7 +46,13 @@ export const updateContact = async (id, data) => {
   if (index === -1) {
     return null;
   }
-  contacts[index] = { id, ...data };
+
+  Object.keys(data).forEach((key) => {
+    if (data[key] !== undefined) {
+      contacts[index][key] = data[key];
+    }
+  });
+
   await fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
   return contacts[index];
 };

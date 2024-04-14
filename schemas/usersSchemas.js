@@ -7,3 +7,8 @@ export const registerSchema = Joi.object({
   password: Joi.string().min(8).required(),
   subscription: Joi.string().optional(),
 });
+
+export const loginSchema = Joi.object({
+  email: Joi.string().pattern(emailRegex).required(),
+  password: Joi.string().min(8).required(),
+});

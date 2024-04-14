@@ -29,3 +29,5 @@ const userSchema = new Schema(
 );
 
 userSchema.post("save", handleMongooseError);
+
+export const User = model("user", userSchema);

@@ -3,7 +3,8 @@ import { Contact } from "../db/contact.js";
 
 export const getAllContacts = async (req, res, next) => {
   try {
-    const result = await Contact.find();
+    const { _id: owner } = req.user;
+    const result = await Contact.find({ owner });
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -38,7 +39,9 @@ export const deleteContact = async (req, res, next) => {
 
 export const createContact = async (req, res, next) => {
   try {
-    const result = await Contact.create(req.body);
+    const { _id: owner } = req.user;
+    console.log(owner);
+    const result = await Contact.create({ ...req.body, owner });
     res.status(201).json(result);
   } catch (error) {
     next(error);

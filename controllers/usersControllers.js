@@ -61,3 +61,12 @@ export const userLogin = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getCurrent = async (req, res) => {
+  const { email, subscription } = req.user;
+
+  res.json({
+    email,
+    subscription,
+  });
+};

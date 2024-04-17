@@ -5,6 +5,7 @@ import {
   userRegister,
   userLogin,
   getCurrent,
+  logout,
 } from "../controllers/usersControllers.js";
 import { authenticate } from "../middlewares/authenticate.js";
 
@@ -15,5 +16,7 @@ authRouter.post("/register", validateBody(registerSchema), userRegister);
 authRouter.post("/login", validateBody(loginSchema), userLogin);
 
 authRouter.get("/current", authenticate, getCurrent);
+
+authRouter.post("/logout", authenticate, logout);
 
 export default authRouter;

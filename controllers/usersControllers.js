@@ -80,3 +80,31 @@ export const logout = async (req, res) => {
 
   res.status(204).send();
 };
+
+export const updateStatusUser = async (req, res, next) => {
+  try {
+    const { subscription } = req.body;
+    const { _id } = req.user;
+    const allowedSubscriptions = ["starter", "pro", "business"];
+
+    if (!allowedSubscriptions.includes(subscription)) {
+      throw HttpError(400, "Invalid subscription value");
+    }
+
+    const updatedUser = await User.findOneAndUpdate(
+      _id,
+      { subscription },
+      {
+        new: true,
+      }
+    );
+
+    if (!updatedUser) {
+      throw HttpError(404, "Not found");
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    next(error);
+  }
+};

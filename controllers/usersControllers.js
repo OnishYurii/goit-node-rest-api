@@ -4,10 +4,18 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import gravatar from "gravatar";
+import path from "path";
+import fs from "fs/promises";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
 const { SECRET_KEY } = process.env;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const avatarsDir = `${__dirname}/../public/avatars`;
 
 export const userRegister = async (req, res, next) => {
   try {
@@ -110,6 +118,22 @@ export const updateStatusUser = async (req, res, next) => {
     }
 
     res.status(200).json(updatedUser);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateAvatar = async (req, res, next) => {
+  try {
+    const { _id } = req.user;
+    const { path: tempUpload, originalname } = req.file;
+    const filename = `${_id}_${originalname}`;
+    const resultUpload = path.join(avatarsDir, filename);
+    await fs.rename(tempUpload, resultUpload);
+    const avatarURL = path.join("avatars", filename);
+    await User.findByIdAndUpdate(_id, { avatarURL });
+
+    res.status(200).json({ avatarURL });
   } catch (error) {
     next(error);
   }

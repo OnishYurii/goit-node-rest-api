@@ -127,6 +127,11 @@ export const updateStatusUser = async (req, res, next) => {
 export const updateAvatar = async (req, res, next) => {
   try {
     const { _id } = req.user;
+
+    if (!req.file) {
+      throw HttpError(400, "File was not uploaded");
+    }
+
     const { path: tempUpload, originalname } = req.file;
     const filename = `${_id}_${originalname}`;
     const resultUpload = path.join(avatarsDir, filename);

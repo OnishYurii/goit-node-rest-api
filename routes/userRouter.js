@@ -7,8 +7,10 @@ import {
   getCurrent,
   logout,
   updateStatusUser,
+  updateAvatar,
 } from "../controllers/usersControllers.js";
 import { authenticate } from "../middlewares/authenticate.js";
+import { upload } from "../middlewares/upload.js";
 
 const authRouter = express.Router();
 
@@ -21,5 +23,12 @@ authRouter.get("/current", authenticate, getCurrent);
 authRouter.post("/logout", authenticate, logout);
 
 authRouter.patch("/", authenticate, updateStatusUser);
+
+authRouter.patch(
+  "/avatars",
+  authenticate,
+  upload.single("avatar"),
+  updateAvatar
+);
 
 export default authRouter;

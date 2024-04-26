@@ -1,4 +1,5 @@
 import HttpError from "../helpers/HttpError.js";
+import { sendEmail } from "../helpers/sendEmail.js";
 import { User } from "../db/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -8,10 +9,11 @@ import path from "path";
 import fs from "fs/promises";
 import { fileURLToPath } from "url";
 import Jimp from "jimp";
+import { nanoid } from "nanoid";
 
 dotenv.config();
 
-const { SECRET_KEY } = process.env;
+const { SECRET_KEY, BASE_URL } = process.env;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,12 +31,23 @@ export const userRegister = async (req, res, next) => {
 
     const hashPassword = await bcrypt.hash(password, 10);
     const avatarURL = gravatar.url(email);
+    const verificationToken = nanoid();
 
     const newUser = await User.create({
       ...req.body,
       password: hashPassword,
       avatarURL,
+      verificationToken,
     });
+
+    const verifyEmail = {
+      to: email,
+      subject: "Verify email",
+      html: `<a target="_blank" href= "${BASE_URL}/api/users/verify/${verificationToken}">Click verify mail</a>`,
+    };
+
+    await sendEmail(verifyEmail);
+
     res.status(201).json({
       user: {
         email: newUser.email,

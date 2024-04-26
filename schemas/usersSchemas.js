@@ -24,3 +24,10 @@ export const loginSchema = Joi.object({
     "any.required": "Password is required",
   }),
 });
+
+export const emailSchema = Joi.object({
+  email: Joi.string().pattern(emailRegex).required().messages({
+    "string.pattern.base": "Email is invalid",
+    "any.required": "Email is required",
+  }),
+});

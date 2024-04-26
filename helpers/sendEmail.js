@@ -6,11 +6,11 @@ dotenv.config();
 const { META_PASSWORD } = process.env;
 
 const config = {
-  host: "smtp.meta.ua",
+  host: "smtp.ukr.net",
   port: 465,
   secure: true,
   auth: {
-    user: "onyshchenko27@meta.ua",
+    user: "mega-leion@ukr.net",
     pass: META_PASSWORD,
   },
 };
@@ -18,7 +18,7 @@ const config = {
 const transporter = nodemailer.createTransport(config);
 
 export const sendEmail = async (data) => {
-  const email = { ...data, from: "onyshchenko27@meta.ua" };
+  const email = { ...data, from: "mega-leion@ukr.net" };
   await transporter.sendMail(email);
   return true;
 };
